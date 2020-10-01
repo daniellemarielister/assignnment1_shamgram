@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="./css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Pacifico&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/cmw4tuj.css">
+</head>
+<body>
+    <div>
+        <!-- titile -->
+        <div class="title">
+            <h1>Shamgram</h1>
+        </div>
+
+         <!-- flex box for posts -->
+        <div class="postsContainers" onload=getPosts()>
+            <div class="eachPost" id='1' onload=fillPost(this)>
+                <div class="photoAndLikeContainer" id=photo_1 onclick=addLike(this)> 
+                    <!-- photo -->
+                    <img class="bigPhoto" src="assets/image1.png">
+                    <!-- like button -->
+                    <img id="likeIcon" class="likeButton" src="assets/emptyHeart.svg"> 
+                    <!-- like count -->
+                    <p class="counter">2</p>
+                </div>
+                
+                <div class="bottom">
+                    <div class="commentInput">
+                        <form>
+                            <input type="text" id="comment" placeholder="leave a comment">
+                            <button>send</button>
+                        </form>
+                    </div>
+
+                    <div class="displayComments" id=comments_1>
+                        <ul>
+                            <li>Comment items</li>
+                            <li>another comment</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="eachPost" id='1' onload=fillPost(this)>
+                <div class="photoAndLikeContainer" id=photo_1 onclick=addLike(this)> 
+                    <!-- photo -->
+                    <img class="bigPhoto" src="assets/image1.png">
+                    <!-- like button -->
+                    <img id="likeIcon" class="likeButton" src="assets/emptyHeart.svg"> 
+                    <!-- like count -->
+                    <p class="counter">2</p>
+                </div>
+                
+                <div class="bottom">
+                    <div class="commentInput">
+                        <form>
+                            <input type="text" id="comment" placeholder="leave a comment">
+                            <button>send</button>
+                        </form>
+                    </div>
+
+                    <div class="displayComments" id=comments_1>
+                        <ul>
+                            <li>Comment items</li>
+                            <li>another comment</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="eachPost" id='1' onload=fillPost(this)>
+                <div class="photoAndLikeContainer" id=photo_1 onclick=addLike(this)> 
+                    <!-- photo -->
+                    <img class="bigPhoto" src="assets/image1.png">
+                    <!-- like button -->
+                    <img id="likeIcon" class="likeButton" src="assets/emptyHeart.svg"> 
+                    <!-- like count -->
+                    <p class="counter">2</p>
+                </div>
+                
+                <div class="bottom">
+                    <div class="commentInput">
+                        <form>
+                            <input type="text" id="comment" placeholder="leave a comment">
+                            <button>send</button>
+                        </form>
+                    </div>
+
+                    <div class="displayComments" id=comments_1>
+                        <ul>
+                            <li>Comment items</li>
+                            <li>another comment</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="eachPost" id='1' onload=fillPost(this)>
+                <div class="photoAndLikeContainer" id=photo_1 onclick=addLike(this)> 
+                    <!-- photo -->
+                    <img class="bigPhoto" src="assets/image1.png">
+                    <!-- like button -->
+                    <img id="likeIcon" class="likeButton" src="assets/emptyHeart.svg"> 
+                    <!-- like count -->
+                    <p class="counter">2</p>
+                </div>
+                
+                <div class="bottom">
+                    <div class="commentInput">
+                        <form>
+                            <input type="text" id="comment" placeholder="leave a comment">
+                            <button>send</button>
+                        </form>
+                    </div>
+
+                    <div class="displayComments" id=comments_1>
+                        <ul>
+                            <li>Comment items</li>
+                            <li>another comment</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById(photo_1).onclick = function(){
+            console.log('click');
+            document.getElementById('likeIcon').src = "assets/filledHeart.svg";// filled in heart image
+        }
+
+        
+        // function addLike(div) {
+        //     // statements
+        //     var id = div.id; // or however you want to use the id
+        //     // statements
+        //   };
+        
+        
+
+    
+    </script>
+</body>
+</html>
+
+
+<!-- How it could work:
+  - Load page with postsContainers as an empty div
+  - postsContainers would generate posts by:
+    - Asking the server for a list of photo IDs
+    - Loop over each ID:
+        - Make a post for each ID
+        - When a post is made, it runs it's own onload() function that fills out images and commonets and likes -->

@@ -1,38 +1,218 @@
 <!doctype html>
 <html>
   <head>
-    
+    <link rel="stylesheet" href="./css/style.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
+
+  <div class="title">
+      <h1>Shamgram</h1>
+  </div>
+  <h1>Click to load post1</h1>
+  <button id="loadPost">CLICK TO LOAD</button>
+
+  <h1>Click to load post2</h1>
+  <button id="loadPost2">CLICK TO LOAD</button>
+
+   <!-- flex box for posts -->
+  <div class="postsContainers" id="postsContainers" onload=getPosts()>
+  </div>
+      
+  <script type="module">
+    import { Base64 } from 'https://cdn.jsdelivr.net/npm/js-base64@3.5.2/base64.mjs';
+
+    function _arrayBufferToBase64( buffer ) {
+        var binary = '';
+        var bytes = new Uint8Array( buffer );
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode( bytes[ i ] );
+        }
+        return window.btoa( binary );
+    }
+
+    window.onload = function(){
+      socket.emit('getListOfPhotos');
+      };
+  
+    var socket = io();
+
+
+    // document.getElementById('loadPost').onclick = function(){
+    //   var photoID = data;
+
+    //   socket.emit('getPhotoByID', {photoID: photoID});
+    //   console.log('its sent');
+
+    //   // get comments
+    //   socket.emit( 'getCommentsByID', { photoID: photoID });
+
+    //   // get likes
+    //   socket.emit('getLikesByID', {photoID: photoID});
+
+    //   // add input
+    //   document.getElementById('sendComment' + photoID).onclick = function(){
+    //     var comment = document.getElementById('comment' + photoID);
+    //     console.log(comment);
+    //     socket.emit('sendComment', { comment: comment.value, photoID: photoID});
+    //   };
+
+    //   // get likes
+    //   // display the above
+
+    //   // add like button
+    //   document.getElementById('postGoesHere' + photoID).onclick = function(){
+    //     console.log('click');
+    //     document.getElementById('likeIcon' + photoID).src='';
         
-    <button id="fromClient">From Client</button>
+    //     socket.emit( 'addLike', { photoID: photoID});
+    //     // trying to get the button unclickable after one click
+    //     // document.getElementById('postGoesHere').id = 'newID';
+    //   };
+    // };
 
-      <script>
 
-      var socket = io();
 
-      socket.on('fromServer', function(data) {
-                
-        console.log( 'ON: fromServer');
-                
+
+
+    document.getElementById('loadPost2').onclick = function(){
+      
+
+    }
+
+    function buildPost(photoID){
+      var div = document.createElement('div');
+      div.id = photoID;    
+      div.className = "eachPost"
+      // div.class = "eachPost"
+      var postHTML = `
+  <div class="photoAndLikeContainer" id='postGoesHerephotoID'> 
+      <!-- photo -->
+      <img class="bigPhoto" id="placePhotoHerephotoID" src="">
+      <!-- like button -->
+      <img id="likeIconphotoID" class="likeButton" src="assets/emptyHeart.svg"> 
+      <!-- like count -->
+      <p class="counter" id="counterphotoID">2</p>
+  </div>
+  
+  <div class="bottom">
+      <div class="commentInput">
+          <form onsubmit="return false">
+              <input type="text" id="commentphotoID" placeholder="leave a comment">
+              <button id="sendCommentphotoID">send</button>
+          </form>
+      </div>
+
+      <div class="displayComments" id=comments_2>
+          <ul id="listphotoID">
+          </ul>
+      </div>
+  </div>
+`.replaceAll('photoID', photoID);
+      div.innerHTML = postHTML;
+      document.getElementById('postsContainers').appendChild(div);
+    }
+    
+
+    
+    
+    function loadPost(photoID){
+      // get photo 
+      socket.emit('getPhotoByID', {photoID: photoID});
+      console.log('its sent' + photoID);
+
+      // get comments
+      socket.emit( 'getCommentsByID', { photoID: photoID });
+
+      // get likes
+      socket.emit('getLikesByID', {photoID: photoID});
+
+      // add input
+      document.getElementById('sendComment' + photoID).onclick = function(){
+        var comment = document.getElementById('comment'+ photoID);
+        console.log(comment);
+        socket.emit('sendComment', { comment: comment.value, photoID: photoID});
+        comment.value = "";
+        console.log(comment)
+      };
+
+      // get likes
+      // display the above
+
+      // add like button
+      document.getElementById('postGoesHere' + photoID).onclick = function(){
+        console.log('click');
+        document.getElementById('likeIcon' + photoID).src='assets/filledHeart.svg';
+        
+        socket.emit( 'addLike', { photoID: photoID});
+        // trying to get the button unclickable after one click
+        // document.getElementById('postGoesHere').id = 'newID';
+      };
+    };
+
+
+
+    // ************************** post 1 *************************************
+
+    socket.on("receivePhotoIDs", function(data){
+      var posts = data.photoIDs;
+      console.log(posts);
+      posts.forEach(function(post){
+        buildPost(post); // builds the html
+        loadPost(post);
       });
-          
-      socket.on('time', function(data) {
-                
-        console.log( 'ON: time');
-                
+
+    });
+
+     // displaying photo in div
+    socket.on("receivePhoto", function(data){
+        document.getElementById("placePhotoHere").src = "data:image/png;base64," + _arrayBufferToBase64(data.photo);
       });
-            
-      document.getElementById('fromClient').onclick = function(){
-               
-        socket.emit('fromClient', { "message":"Sent from client!" });
-        console.log( 'EMIT: fromClient');
-                
-      }
-            
-    </script>
+
+    socket.on('reloadCommentsFromServer', function(data) {
+      var photoID = data.photoID
+      socket.emit( 'getCommentsByID', { photoID: photoID });
+    });
+
+    // getting comments
+    socket.on('commentsFromServer', function(data) {
+      // get div for photoID
+      console.log(data);
+
+      var photoID = data.photoID;
+      console.log(photoID);
+      // // not sure how to get the data for photo id
+      // seperate each comment in array
+      var listID = document.getElementById('list' + photoID);
+      listID.innerHTML = "";
+      
+
+      data.comments.forEach(function(comment) {
+        console.log(photoID + "is inside a foreach loop");
+        // var listID = document.getElementById('list' + photoID);
+        console.log(listID);
+        var entry = document.createElement('li');
+        entry.appendChild(document.createTextNode(comment));
+        console.log("BELOW IS WHAT LIST IS");
+        listID.appendChild(entry);
+      });
+    });
+
+    // getting likes
+    socket.on('likesFromServer', function(data) {
+      // get div for photoID
+      var photoID = data.photoID; // not sure how to get the data for photo id
+      var likeTotal = data.likes;
+      console.log(photoID);
+      console.log(likeTotal);
+
+      // // get element by id and innerhtml the likes total
+      document.getElementById('counter' + photoID).innerHTML = likeTotal;
+    });
+
+  </script>
         
   </body>
 

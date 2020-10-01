@@ -1,0 +1,73 @@
+Load index - Done
+Ask server for a list of photo IDs - Done
+Ask server for photo of a given ID
+Ask server for comments for a photo ID
+Ask server for number of likes for a given photo ID
+
+
+Procedure for uploading a photo:
+    - Add photo to photo table
+    - Add row to like table for the new photo
+
+todo:
+
+Like photo function -
+    -button on the button press it would increment a row (updating the numnber)
+    -when user clicks change from empty to full
+    -add row to likes for each photo in database for 0 likes to start
+    -show number of likes
+    javascript ask for new likes (by polling)
+
+Comments - 
+    -input for commnet + button to push to server and then database
+    -get comments fromm database
+    -display comments
+    -javascript ask for new comments (by polling)
+
+    get comment - 
+        -onload request comments by id - index
+        -get comment by photo ID - app js
+        -send to index to be posted with photo - appjs -> index
+        -display the sent comments - index
+
+
+open questions - 
+    how do i get photo id into commnent submission?
+    how do i sort photos by timestamp?
+    how could i also show the timestamp as well?
+    should we be using PHP for the sql queries?
+    make function for getting post by photo id?
+
+
+todo :
+    -get likes functions to work
+    -add likes 
+    -populate database with photos
+
+
+How to load photos:
+    - Open webpage
+    - Aske server for list of photo IDs
+    - Randomize list of photo IDs
+    - make a div for a post
+        - Add photo by ID
+        - add comments
+        - add likes
+
+
+        Marks:
+
+        1   design 3.5 = 2 hours
+        2   content 3 = 1 hours
+        2   code formatting 3 = 1 hour
+        2   deployment 2 = 2 hours
+        0   template 3 = 4-5 hours
+        4   data 1 = 1 hour
+        4.5 routing n/a
+        2.5 advanced n/a - rest api
+
+        mark total = 18/40
+
+
+
+
