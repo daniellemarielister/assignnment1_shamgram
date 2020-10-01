@@ -168,7 +168,7 @@
 
      // displaying photo in div
     socket.on("receivePhoto", function(data){
-        document.getElementById("placePhotoHere").src = "data:image/png;base64," + _arrayBufferToBase64(data.photo);
+        document.getElementById("placePhotoHere" + data.photoID).src = "data:image/png;base64," + _arrayBufferToBase64(data.photo);
       });
 
     socket.on('reloadCommentsFromServer', function(data) {
