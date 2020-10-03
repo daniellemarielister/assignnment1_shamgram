@@ -6,17 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-
   <div class="title">
       <h1>Shamgram</h1>
   </div>
-  <h1>Click to load post1</h1>
-  <button id="loadPost">CLICK TO LOAD</button>
-
-  <h1>Click to load post2</h1>
-  <button id="loadPost2">CLICK TO LOAD</button>
-
-   <!-- flex box for posts -->
+  <!-- flex box container for posts to go into -->
   <div class="postsContainers" id="postsContainers" onload=getPosts()>
   </div>
       
@@ -32,188 +25,114 @@
         }
         return window.btoa( binary );
     }
+    var socket = io();
 
+    // onload function to call to the server to get a list of photoids
     window.onload = function(){
+      console.log("laoding");
       socket.emit('getListOfPhotos');
       };
   
-    var socket = io();
-
-
-    // document.getElementById('loadPost').onclick = function(){
-    //   var photoID = data;
-
-    //   socket.emit('getPhotoByID', {photoID: photoID});
-    //   console.log('its sent');
-
-    //   // get comments
-    //   socket.emit( 'getCommentsByID', { photoID: photoID });
-
-    //   // get likes
-    //   socket.emit('getLikesByID', {photoID: photoID});
-
-    //   // add input
-    //   document.getElementById('sendComment' + photoID).onclick = function(){
-    //     var comment = document.getElementById('comment' + photoID);
-    //     console.log(comment);
-    //     socket.emit('sendComment', { comment: comment.value, photoID: photoID});
-    //   };
-
-    //   // get likes
-    //   // display the above
-
-    //   // add like button
-    //   document.getElementById('postGoesHere' + photoID).onclick = function(){
-    //     console.log('click');
-    //     document.getElementById('likeIcon' + photoID).src='';
-        
-    //     socket.emit( 'addLike', { photoID: photoID});
-    //     // trying to get the button unclickable after one click
-    //     // document.getElementById('postGoesHere').id = 'newID';
-    //   };
-    // };
-
-
-
-
-
-    document.getElementById('loadPost2').onclick = function(){
-      
-
-    }
-
+    // function that builds the html stucture for each photoid given (called by socket.on("receivePhotoIDs"))
     function buildPost(photoID){
       var div = document.createElement('div');
       div.id = photoID;    
       div.className = "eachPost"
-      // div.class = "eachPost"
       var postHTML = `
-  <div class="photoAndLikeContainer" id='postGoesHerephotoID'> 
-      <!-- photo -->
-      <img class="bigPhoto" id="placePhotoHerephotoID" src="">
-      <!-- like button -->
-      <img id="likeIconphotoID" class="likeButton" src="assets/emptyHeart.svg"> 
-      <!-- like count -->
-      <p class="counter" id="counterphotoID">2</p>
-  </div>
-  
-  <div class="bottom">
-      <div class="commentInput">
-          <form onsubmit="return false">
-              <input type="text" id="commentphotoID" placeholder="leave a comment">
-              <button id="sendCommentphotoID">send</button>
-          </form>
-      </div>
+        <div class="photoAndLikeContainer" id='postGoesHerephotoID'> 
+            <!-- photo -->
+            <img class="bigPhoto" id="placePhotoHerephotoID" src="">
+            <!-- like button -->
+            <img id="likeIconphotoID" class="likeButton" src="assets/emptyHeart.svg"> 
+            <!-- like count -->
+            <p class="counter" id="counterphotoID">2</p>
+        </div>
+        
+        <div class="bottom">
+            <div class="commentInput">
+                <form onsubmit="return false">
+                    <input type="text" id="commentphotoID" placeholder="leave a comment">
+                    <button id="sendCommentphotoID">send</button>
+                </form>
+            </div>
 
-      <div class="displayComments" id=comments_2>
-          <ul id="listphotoID">
-          </ul>
-      </div>
-  </div>
-`.replaceAll('photoID', photoID);
+            <div class="displayComments" id=comments_2>
+                <ul id="listphotoID">
+                </ul>
+            </div>
+        </div>`.replaceAll('photoID', photoID); // replaceAll will replace everywhere that says "photoid" with the actual photoid value
       div.innerHTML = postHTML;
       document.getElementById('postsContainers').appendChild(div);
     }
     
-
-    
-    
+    // function to get the content for each post
     function loadPost(photoID){
       // get photo 
       socket.emit('getPhotoByID', {photoID: photoID});
-      console.log('its sent' + photoID);
-
       // get comments
       socket.emit( 'getCommentsByID', { photoID: photoID });
-
       // get likes
       socket.emit('getLikesByID', {photoID: photoID});
-
       // add input
       document.getElementById('sendComment' + photoID).onclick = function(){
         var comment = document.getElementById('comment'+ photoID);
-        console.log(comment);
         socket.emit('sendComment', { comment: comment.value, photoID: photoID});
         comment.value = "";
-        console.log(comment)
       };
-
-      // get likes
-      // display the above
-
-      // add like button
+      // add like from like button
       document.getElementById('postGoesHere' + photoID).onclick = function(){
-        console.log('click');
+        // also changes the empty hear to filled heart
         document.getElementById('likeIcon' + photoID).src='assets/filledHeart.svg';
-        
         socket.emit( 'addLike', { photoID: photoID});
-        // trying to get the button unclickable after one click
-        // document.getElementById('postGoesHere').id = 'newID';
       };
     };
 
+    // ************************** socket.on functions *************************************
 
-
-    // ************************** post 1 *************************************
-
+    // receives an array of photo ids from server
     socket.on("receivePhotoIDs", function(data){
       var posts = data.photoIDs;
       console.log(posts);
       posts.forEach(function(post){
         buildPost(post); // builds the html
-        loadPost(post);
+        loadPost(post); // loads the content 
       });
-
     });
 
-     // displaying photo in div
+     // recieves photo from server and displays photo in div by photo id
     socket.on("receivePhoto", function(data){
         document.getElementById("placePhotoHere" + data.photoID).src = "data:image/png;base64," + _arrayBufferToBase64(data.photo);
       });
-
+    
+    // after a new commented is inputed into the database the server will pass the photoid back and then call the function to reload the comments
     socket.on('reloadCommentsFromServer', function(data) {
       var photoID = data.photoID
       socket.emit( 'getCommentsByID', { photoID: photoID });
     });
 
-    // getting comments
+    // getting comments from server and then displaying 
     socket.on('commentsFromServer', function(data) {
-      // get div for photoID
-      console.log(data);
-
+      // photo id comes in a array
       var photoID = data.photoID;
-      console.log(photoID);
-      // // not sure how to get the data for photo id
-      // seperate each comment in array
       var listID = document.getElementById('list' + photoID);
+      // clears the previous loaded comments (needed for when you add a comment)
       listID.innerHTML = "";
-      
-
+      // use a foreach loop to seperate each comment
       data.comments.forEach(function(comment) {
-        console.log(photoID + "is inside a foreach loop");
-        // var listID = document.getElementById('list' + photoID);
-        console.log(listID);
         var entry = document.createElement('li');
         entry.appendChild(document.createTextNode(comment));
-        console.log("BELOW IS WHAT LIST IS");
         listID.appendChild(entry);
       });
     });
 
-    // getting likes
+    // getting likes for photo id
     socket.on('likesFromServer', function(data) {
-      // get div for photoID
-      var photoID = data.photoID; // not sure how to get the data for photo id
+      var photoID = data.photoID;
       var likeTotal = data.likes;
-      console.log(photoID);
-      console.log(likeTotal);
-
-      // // get element by id and innerhtml the likes total
+      // get element by id and innerhtml the likes total
       document.getElementById('counter' + photoID).innerHTML = likeTotal;
     });
 
-  </script>
-        
+  </script> 
   </body>
-
 </html>

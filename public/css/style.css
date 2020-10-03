@@ -8,6 +8,8 @@ body {
     font-family: 'Mostra-Nuova', sans-serif;
 }
 
+
+/*  container for all the posts */
 .postsContainers {
     display: flex;
     flex-direction: row;
@@ -20,6 +22,7 @@ body {
     padding-bottom: 100px;
 }
 
+/* media q for 1224px */
 @media only screen and (max-width: 1224px) {
     .postsContainers {
       justify-content: center;
@@ -28,7 +31,7 @@ body {
         margin: 0 30px 30px 30px;
     }
   }
-
+/* media q for 578px */
   @media only screen and (max-width: 578px) {
     .postsContainers {
       justify-content: center;
@@ -40,7 +43,7 @@ body {
     }
   }
 
-
+/* shamgram titile */
 .title {
     color: #8D97A8;
     text-align: center;
@@ -49,6 +52,9 @@ body {
     padding-bottom: 100px;
 }
 
+/* ******** styling for the posts itself ************** */
+
+/* container for post */
 .eachPost {
     width: 420px;
     min-height: 544px;
@@ -60,7 +66,7 @@ body {
     margin-bottom: 30px;
 }
 
-
+/* photo for post */
 .bigPhoto {
     width: 100%;
     height: 500px;
@@ -71,7 +77,7 @@ body {
     padding: 10px;
     display: inline-block;
 }
-
+/* like btn coutner */
 .counter {
     display: inline-block;
     vertical-align: top;
@@ -80,10 +86,13 @@ body {
     color: #7B869B;
 }
 
+/*  container for the like btn and photo */
 .photoAndLikeContainer {
     padding-bottom: 15px;
     
 
+
+/*  comment input */
 }form {
     /* This bit sets up the horizontal layout */
     display:flex;
@@ -94,9 +103,7 @@ body {
   }
   
   input {
-    /* Tell the input to use all the available space */
     flex-grow:2;
-    /* And hide the input's outline, so the form looks like the outline */
     border:none;
     border-radius: 40px 0 0 40px;
     font-size: 15px;
@@ -105,9 +112,7 @@ body {
     color: #C0C5CF;
   }
 
-  
   input:focus {
-    /* removing the input focus blue box. Put this on the form if you like. */
     outline: none;
   }
   
@@ -131,6 +136,7 @@ body {
       transition: .2s ease-in-out;
   }
 
+/* styling for where the comments get displayed below the submit form */
 ul{
     list-style-type: none;
     list-style-position: outside;
